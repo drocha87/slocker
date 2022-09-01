@@ -1,0 +1,39 @@
+<div class="grid grid-cols-12 hover:bg-gray-100 py-2 px-1 cursor-default">
+    <div class="col-span-4">
+        @Item.Key
+    </div>
+    <div class="col-span-6">
+        @if (!_visible)
+        {
+            <button class="flex items-center text-blue-600" @onclick="@(() => _visible = !_visible)">
+                <span class="material-symbols-outlined" style="font-size: 1rem"> visibility </span>
+                <span class="text-sm ml-3"> Hidden value. Click to show value </span>
+            </button>
+        }
+        else
+        {
+            <button class="flex items-center" @onclick="@(() => _visible = false)">
+                <span class="material-symbols-outlined" style="font-size: 1rem">
+                    visibility_off
+                </span>
+                <span class="text-sm ml-3">
+                    @Item.Value
+                </span>
+            </button>
+        }
+    </div>
+    <div>
+        <button @onclick="Delete">
+            <span class="material-symbols-outlined text-gray-600" style="font-size: 1.3rem">
+                delete
+            </span>
+        </button>
+    </div>
+    <div>
+        <button>
+            <span class="material-symbols-outlined text-gray-600" style="font-size: 1.3rem">
+                edit
+            </span>
+        </button>
+    </div>
+</div>

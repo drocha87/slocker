@@ -1,0 +1,19 @@
+﻿@page "/"
+
+@if (!SS.HasSecret())
+{
+    <div class="w-screen h-screen flex justify-center items-center">
+        <div class="w-80 border rounded-md p-4">
+            <h3 class="text-lg font-medium">Secret Locker</h3>
+            <p class="mt-4 text-sm">Type in the input below the secret to be used in this session</p>
+            <input @bind-value="_secret" class="border mt-4 outline-none px-2 w-full" type="password" />
+            <button class="mt-4 bg-blue-400 px-4 py-1 text-white ml-auto block" @onclick="SetSecret">
+                Start Session
+            </button>
+        </div>
+    </div>
+}
+else
+{
+    <div class="bg-slate-600">Has secret</div>
+}
