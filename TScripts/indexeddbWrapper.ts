@@ -25,11 +25,19 @@ export function initializeDatabase(reference: any, dbName: string) {
   };
 }
 
-export function putPair(key: string, value: string) {
+export async function putPair(key: string, value: string, secret: string) {
   const store = database.transaction("pairs", "readwrite").objectStore("pairs");
   const request = store.put({ key, value });
   request.onsuccess = async () => {
     await dotnetReference.invokeMethodAsync("PairSaved");
+  };
+}
+
+export async function deletePair(id: number) {
+  const store = database.transaction("pairs", "readwrite").objectStore("pairs");
+  const request = store.delete(id);
+  request.onsuccess = async () => {
+    await dotnetReference.invokeMethodAsync("PairDeleted", id);
   };
 }
 

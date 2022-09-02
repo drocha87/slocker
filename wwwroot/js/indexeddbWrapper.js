@@ -28,11 +28,22 @@ export function initializeDatabase(reference, dbName) {
         console.error(`cannot open database with name ${dbName}: ${event}`);
     };
 }
-export function putPair(key, value) {
-    const store = database.transaction("pairs", "readwrite").objectStore("pairs");
-    const request = store.put({ key, value });
-    request.onsuccess = () => __awaiter(this, void 0, void 0, function* () {
-        yield dotnetReference.invokeMethodAsync("PairSaved");
+export function putPair(key, value, secret) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const store = database.transaction("pairs", "readwrite").objectStore("pairs");
+        const request = store.put({ key, value });
+        request.onsuccess = () => __awaiter(this, void 0, void 0, function* () {
+            yield dotnetReference.invokeMethodAsync("PairSaved");
+        });
+    });
+}
+export function deletePair(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const store = database.transaction("pairs", "readwrite").objectStore("pairs");
+        const request = store.delete(id);
+        request.onsuccess = () => __awaiter(this, void 0, void 0, function* () {
+            yield dotnetReference.invokeMethodAsync("PairDeleted", id);
+        });
     });
 }
 export function getAllPairs() {

@@ -7,6 +7,8 @@ public partial class ValuePairRow : ComponentBase
 {
     [Parameter] public Pair Item { get; set; } = null!;
 
+    [Parameter] public EventCallback<Pair> OnDeleted { get; set; }
+
     private bool _visible = false;
 
     protected override async Task OnParametersSetAsync()
@@ -14,5 +16,8 @@ public partial class ValuePairRow : ComponentBase
         await base.OnParametersSetAsync();
     }
 
-    private void Delete() { }
+    private async Task Delete()
+    {
+        await OnDeleted.InvokeAsync(Item);
+    }
 }

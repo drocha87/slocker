@@ -49,6 +49,14 @@ public partial class Dashboard : ComponentBase
         }
     }
 
+    public async Task DeletePair(Pair pair)
+    {
+        if (_module is not null)
+        {
+            await _module.InvokeVoidAsync("deletePair", pair.Id);
+        }
+    }
+
     [JSInvokable]
     public async Task DatabaseInitialized()
     {
@@ -73,61 +81,13 @@ public partial class Dashboard : ComponentBase
             await _module.InvokeVoidAsync("getAllPairs");
         }
     }
+
+    [JSInvokable]
+    public async Task PairDeleted(double id)
+    {
+        if (_module is not null)
+        {
+            await _module.InvokeVoidAsync("getAllPairs");
+        }
+    }
 }
-// <script setup lang="ts">
-// import { useCounterStore } from "@/stores/counter";
-// import { computed, onMounted, ref } from "vue";
-// import LayoutStack from "../components/LayoutStack.vue";
-
-// import ValuePairRow from "../components/ValuePairRow.vue";
-
-// const store = useCounterStore();
-
-// onMounted(async () => {
-//   await store.fetchPairs();
-// });
-
-// async function updatePairs() {
-//   await store.fetchPairs();
-// }
-
-// const pairs = computed(() => {
-//   if (filter.value.length > 0) {
-//     const regex = new RegExp(filter.value, "i");
-//     return store.pairs.filter((x) => regex.test(x.key));
-//   }
-//   return store.pairs;
-// });
-
-// async function addPair() {
-//   const result = await fetch("http://localhost:5087/pairs", {
-//     method: "POST",
-//     headers: {
-//       "content-type": "application/json",
-//     },
-//     body: JSON.stringify({
-//       key: key.value,
-//       value: value.value,
-//     }),
-//   });
-
-//   if (result.ok) {
-//     key.value = "";
-//     value.value = "";
-//     await store.fetchPairs();
-//   }
-
-//   return true;
-// }
-
-// function cancel() {
-//   showNewApplicationSettingsModal.value = false;
-//   key.value = "";
-//   value.value = "";
-// }
-
-// const key = ref("");
-// const filter = ref("");
-// const value = ref("");
-// const showNewApplicationSettingsModal = ref(false);
-// </script>
