@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using SLocker.Models;
@@ -32,6 +33,17 @@ public partial class Dashboard : ComponentBase
         if (!SS.HasSecret())
         {
             Navigation.NavigateTo("/");
+        }
+    }
+
+    private string? _filter;
+
+    public List<Pair>? FilteredPairs
+    {
+        get
+        {
+            var regex = new Regex(_filter ?? ".*");
+            return Pairs?.Where(x => regex.IsMatch(x.Key)).ToList();
         }
     }
 
