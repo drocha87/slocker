@@ -6,15 +6,17 @@
         @if (!_visible)
         {
             <button class="flex items-center text-blue-600" @onclick="@(() => _visible = !_visible)">
-                <span class="material-symbols-outlined" style="font-size: 1rem"> visibility </span>
+                <span class="fill-blue-600" style="transform: scale(0.8);">
+                    <IconVisibility></IconVisibility>
+                </span>
                 <span class="text-sm ml-3"> Hidden value. Click to show value </span>
             </button>
         }
         else
         {
             <button class="flex items-center" @onclick="@(() => _visible = false)">
-                <span class="material-symbols-outlined" style="font-size: 1rem">
-                    visibility_off
+                <span class="fill-blue-600" style="transform: scale(0.8);">
+                    <IconVisibilityOff></IconVisibilityOff>
                 </span>
                 <span class="text-sm ml-3">
                     @Item.Value
@@ -24,15 +26,15 @@
     </div>
     <div>
         <button @onclick="Delete">
-            <span class="material-symbols-outlined text-gray-600" style="font-size: 1.3rem">
-                delete
+            <span class="fill-gray-500">
+                <IconDelete></IconDelete>
             </span>
         </button>
     </div>
     <div>
         <button>
-            <span class="material-symbols-outlined text-gray-600" style="font-size: 1.3rem">
-                edit
+            <span class="fill-gray-500">
+                <IconEdit></IconEdit>
             </span>
         </button>
     </div>
