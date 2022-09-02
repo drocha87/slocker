@@ -1,26 +1,94 @@
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Components;
-using SLocker.Services;
+using Microsoft.JSInterop;
+using SLocker.Models;
 
 namespace SLocker.Pages;
 
 public partial class Index : ComponentBase
 {
-    [Inject] SecretService SS { get; set; } = null!;
-    [Inject] NavigationManager Navigation { get; set; } = null!;
+    [Inject] IJSRuntime JS { get; set; } = null!;
 
+    private bool showNewApplicationSettingsModal = false;
+
+    private List<Pair>? Pairs;
+
+    private IJSObjectReference? _module;
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            var reference = DotNetObjectReference.Create(this);
+
+            _module = await JS.InvokeAsync<IJSObjectReference>("import", "./js/indexeddbWrapper.js");
+            await _module.InvokeVoidAsync("initializeDatabase", reference, "slockerdb");
+        }
     }
 
-    private string? _secret;
+    private string? _filter;
 
-    private void SetSecret()
+    public List<Pair>? FilteredPairs
     {
-        if (!string.IsNullOrEmpty(_secret))
+        get
         {
-            SS.Secret = _secret;
-            Navigation.NavigateTo("/dashboard");
+            var regex = new Regex(_filter ?? ".*");
+            return Pairs?.Where(x => regex.IsMatch(x.Key)).ToList();
+        }
+    }
+
+    private string? _pairName;
+    private string? _pairValue;
+
+    public async Task SavePair()
+    {
+        if (_module is not null)
+        {
+            if (!string.IsNullOrEmpty(_pairName) && !string.IsNullOrEmpty(_pairValue))
+            {
+                await _module.InvokeVoidAsync("putPair", _pairName, _pairValue);
+            }
+        }
+    }
+
+    public async Task DeletePair(Pair pair)
+    {
+        if (_module is not null)
+        {
+            await _module.InvokeVoidAsync("deletePair", pair.Id);
+        }
+    }
+
+    [JSInvokable]
+    public async Task DatabaseInitialized()
+    {
+        if (_module is not null)
+        {
+            await _module.InvokeVoidAsync("getAllPairs");
+        }
+    }
+
+    [JSInvokable]
+    public async Task UpdatePairs(Pair[] pairs)
+    {
+        Pairs = pairs.ToList();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    [JSInvokable]
+    public async Task PairSaved()
+    {
+        if (_module is not null)
+        {
+            await _module.InvokeVoidAsync("getAllPairs");
+        }
+    }
+
+    [JSInvokable]
+    public async Task PairDeleted(double id)
+    {
+        if (_module is not null)
+        {
+            await _module.InvokeVoidAsync("getAllPairs");
         }
     }
 }

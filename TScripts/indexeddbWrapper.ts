@@ -25,7 +25,7 @@ export function initializeDatabase(reference: any, dbName: string) {
   };
 }
 
-export async function putPair(key: string, value: string, secret: string) {
+export async function putPair(key: string, value: string) {
   const store = database.transaction("pairs", "readwrite").objectStore("pairs");
   const request = store.put({ key, value });
   request.onsuccess = async () => {

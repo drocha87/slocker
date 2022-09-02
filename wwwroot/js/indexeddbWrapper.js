@@ -28,7 +28,7 @@ export function initializeDatabase(reference, dbName) {
         console.error(`cannot open database with name ${dbName}: ${event}`);
     };
 }
-export function putPair(key, value, secret) {
+export function putPair(key, value) {
     return __awaiter(this, void 0, void 0, function* () {
         const store = database.transaction("pairs", "readwrite").objectStore("pairs");
         const request = store.put({ key, value });
